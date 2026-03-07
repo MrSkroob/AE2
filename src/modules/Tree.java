@@ -5,7 +5,8 @@ import java.lang.Math;
 
 public abstract class Tree<T> {
     Comparator<? super T> comparator;
-    Node head;
+    Node root;
+    Node nil;
 
     protected class Node {
         Node left;
@@ -22,8 +23,8 @@ public abstract class Tree<T> {
         this.comparator = comparator;
     }
 
-    protected abstract void delete(Node node);
-    protected abstract void insert(Node node);
+    public abstract void delete(Node node);
+    public abstract void insert(Node node);
     public void insert(T value) {
         insert(new Node(value));
     }
@@ -36,7 +37,7 @@ public abstract class Tree<T> {
     }
 
     public int height() {
-        return height(this.head);
+        return height(this.root);
     }
 
     public int size(Node startNode) {
@@ -47,7 +48,7 @@ public abstract class Tree<T> {
     }
 
     public int size() {
-        return size(this.head);
+        return size(this.root);
     }
 
     public Node predecessor(Node startNode) {
@@ -82,7 +83,7 @@ public abstract class Tree<T> {
     }
 
     public Node min() {
-        return min(this.head);
+        return min(this.root);
     };
 
     public Node max(Node startNode) {
@@ -93,6 +94,11 @@ public abstract class Tree<T> {
     }
 
     public Node max() {
-        return max(this.head);
+        return max(this.root);
+    }
+
+    public void insert(RedBlackTree<T>.Node node) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'insert'");
     }
 }
