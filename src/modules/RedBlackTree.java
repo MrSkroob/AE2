@@ -3,12 +3,18 @@ package modules;
 import java.util.Comparator;
 import java.lang.Math;
 
+// welcome to hell
+// you might wonder: hey! why is everything protected rather than public?
+// in the DynamicSet.java file we have the methods defined with the exact same
+// names and parameters as the spec, which are different to the *true* implementation in here.
+// and it seems silly to have multiple methods to do the same thing.
+
 public class RedBlackTree<T> {
     Comparator<? super T> comparator;
     Node root;
     Node nil;
 
-    private class Node {
+    protected class Node {
         Node left;
         Node right;
         Node parent;
@@ -25,6 +31,26 @@ public class RedBlackTree<T> {
         this.nil = new Node(null);
         this.root = this.nil;
         this.comparator = comparator;
+    }
+
+    protected Node search(Node node, T key) {
+        if (node == null) {
+            return null;
+        }
+
+        if (comparator.compare(node.key, key) == 0) {
+            return node;
+        }
+
+        if (comparator.compare(key, node.key) > 0) {
+            return search(node.right, key);
+        }
+
+        return search(root.left, key);
+    }
+
+    protected Node search(T key) {
+        return search(this.root, key);
     }
 
     private void fixDelete(Node node) {
@@ -110,7 +136,7 @@ public class RedBlackTree<T> {
         }
     }
 
-    public void delete(Node node) {
+    protected void delete(Node node) {
         Node y = node;
         Node x;
         boolean yWasRed = y.isRed;
@@ -234,7 +260,7 @@ public class RedBlackTree<T> {
         this.root.isRed = false;
     }
 
-    public void insert(Node node) {
+    protected void insert(Node node) {
         Node y = this.nil;
         Node x = this.root;
 
@@ -264,33 +290,33 @@ public class RedBlackTree<T> {
         fixInsert(node);
     };
 
-    public void insert(T value) {
+    protected void insert(T value) {
         insert(new Node(value));
     }
 
-    public int height(Node startNode) {
+    protected int height(Node startNode) {
         if (startNode == null) {
             return -1;
         }
         return Math.max(height(startNode.left), height(startNode.right)) + 1;
     }
 
-    public int height() {
+    protected int height() {
         return height(this.root);
     }
 
-    public int size(Node startNode) {
+    protected int size(Node startNode) {
         if (startNode == null) {
             return 0;
         }
         return size(startNode.left) + size(startNode.right) + 1;
     }
 
-    public int size() {
+    protected int size() {
         return size(this.root);
     }
 
-    public Node predecessor(Node startNode) {
+    protected Node predecessor(Node startNode) {
         if (startNode.left != null) {
             return max(startNode.left);
         }
@@ -302,7 +328,7 @@ public class RedBlackTree<T> {
         return parentNode;
     }
 
-    public Node successor(Node startNode) {
+    protected Node successor(Node startNode) {
         if (startNode.right != null) {
             return min(startNode.right);
         }
@@ -314,26 +340,25 @@ public class RedBlackTree<T> {
         return parentNode;
     }
 
-    public Node min(Node startNode) {
+    protected Node min(Node startNode) {
         while (startNode.left != null) {
             startNode = startNode.left;
         } 
         return startNode;
     }
 
-    public Node min() {
+    protected Node min() {
         return min(this.root);
     };
 
-    public Node max(Node startNode) {
+    protected Node max(Node startNode) {
         while (startNode.right != null) {
             startNode = startNode.right;
         }
         return startNode;
     }
 
-    public Node max() {
+    protected Node max() {
         return max(this.root);
     }
-
 }
