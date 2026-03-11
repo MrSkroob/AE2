@@ -281,7 +281,7 @@ public class RedBlackTree<T> {
         else if (comparator.compare(node.key, y.key) < 0) {
             y.left = node;
         }
-        else {
+        else if (comparator.compare(node.key, y.key) > 0) {
             y.right = node;
         }
         node.left = nil;
