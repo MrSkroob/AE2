@@ -1,6 +1,7 @@
 package modules;
 
 import java.util.Comparator;
+import java.util.StringJoiner;
 import java.lang.Math;
 
 // welcome to hell
@@ -25,6 +26,13 @@ public class RedBlackTree<T> {
             this.isRed = false;
             this.key = key;
         }
+
+        public String toString() {
+            if (this.key == null) {
+                return "null";
+            }
+            return this.key.toString();
+        }
     }
 
     public RedBlackTree(Comparator<? super T> comparator) {
@@ -33,8 +41,12 @@ public class RedBlackTree<T> {
         this.comparator = comparator;
     }
 
+    public boolean isNull(Node node) {
+        return node == null || node.key == null;
+    }
+
     protected Node search(Node node, T key) {
-        if (node == null) {
+        if (isNull(node)) {
             return null;
         }
 
@@ -295,7 +307,7 @@ public class RedBlackTree<T> {
     }
 
     protected int height(Node startNode) {
-        if (startNode == null) {
+        if (isNull(startNode)) {
             return -1;
         }
         return Math.max(height(startNode.left), height(startNode.right)) + 1;
@@ -306,7 +318,7 @@ public class RedBlackTree<T> {
     }
 
     protected int size(Node startNode) {
-        if (startNode == null) {
+        if (isNull(startNode)) {
             return 0;
         }
         return size(startNode.left) + size(startNode.right) + 1;
@@ -360,5 +372,21 @@ public class RedBlackTree<T> {
 
     protected Node max() {
         return max(this.root);
+    }
+
+    private void inOrder(Node node, StringJoiner joiner) {
+        if (isNull(node)) {
+            return;
+        }
+
+        inOrder(node.left, joiner);
+        joiner.add(node.toString());
+        inOrder(node.right, joiner);
+    }
+
+    public String toString() {
+        StringJoiner output = new StringJoiner(",");
+        inOrder(this.root, output);
+        return output.toString();
     }
 }

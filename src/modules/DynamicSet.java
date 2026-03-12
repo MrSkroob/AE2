@@ -8,7 +8,10 @@ public class DynamicSet<T> extends RedBlackTree<T> {
     }
 
     public void add(T x) {
-        if (isElement(x)) return;
+        if (isElement(x)) {
+            System.out.println("Exists :v");
+            return;
+        }
         insert(x);
     }
 
@@ -94,3 +97,9 @@ public class DynamicSet<T> extends RedBlackTree<T> {
         return true;
     }
 }
+
+
+// oh boy, this was an incredibly naive and brute force way
+// to implement all those set operations!
+// OH WELL. See the report for worst-case and average-case running times (and working)
+// for part c.
