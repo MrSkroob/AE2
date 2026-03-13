@@ -1,7 +1,3 @@
-import java.lang.reflect.Array;
-
-import javax.print.DocFlavor.STRING;
-
 public class Part2 {
     private static final int ASCII_RANGE = 128;
     private static final int STRING_LENGTH = 6;
@@ -23,6 +19,7 @@ public class Part2 {
 
     public static int randint(int upperBound) {
         // not inclusive
+        // math.random max is *close* to 1.0, but no cigar. 
         return (int)(Math.random() * upperBound); 
     }
 
@@ -30,10 +27,11 @@ public class Part2 {
         // FIXME:
         // for a string length of 6, we should get 2 characters.
         int skip = Math.max(1, STRING_LENGTH / 3);
-        String[] array = new String[skip + 1];
 
-        for (int i = 0; i < array.length; i++) {
-            array[i] = Character.toString(randint(ASCII_RANGE));
+        String[] array = new String[STRING_LENGTH];
+
+        for (int i = 0; i < STRING_LENGTH; i += skip) {
+            array[i] = Character.toString((char)randint(ASCII_RANGE));
         }        
 
         return array;
@@ -44,28 +42,27 @@ public class Part2 {
             throw new IllegalArgumentException("Strings must be more greater or equal to two.");
         }
 
-        for (String string : fixedStrings) {
-            System.out.println(string);
-        }
         // Since hashCode samples at three parts of the string, 
         // we only need to ensure those parts of the strings remain identical. 
         String[] array = new String[strings];
 
         // Populate the array initially with the important strings that the
         // hash function will calculate with.
-        int skip = Math.max(1, STRING_LENGTH / 3);
-        int fixedStringI = 0;
-        for (int i = 0; i < STRING_LENGTH; i += skip) {
-            array[i] = fixedStrings[fixedStringI];
-            fixedStringI++;
-        }
-
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] != null) {
-                continue;
+        for (int j = 0; j < strings; j++) {
+            StringBuilder string = new StringBuilder();
+            
+            for (int i = 0; i < STRING_LENGTH; i++) {
+                if (fixedStrings[i] != null) {
+                    // array[i] = fixedStrings[i];
+                    string.append(fixedStrings[i]);
+                    continue;
+                }
+                int asciiCode = randint(ASCII_RANGE);
+                String character = Character.toString(asciiCode);
+                string.append(character);
             }
-            String character = Character.toString(randint(ASCII_RANGE));
-            array[i] = character;
+
+            array[j] = string.toString();
         }
         
         return array;
@@ -79,10 +76,10 @@ public class Part2 {
         // 0 always.
         int prevHashCode = -1;
         for (String string : strings) {
+            System.out.println(string);
             int hashCode = hashCode(string);
             if (prevHashCode != -1 && hashCode != prevHashCode) {
-                System.out.println("Uh oh! hashCodeKiller didn't work :(");
-                break;
+                throw new RuntimeException("Hashcode returned a non-identical hashcode...");
             }
             prevHashCode = hashCode;
         }
