@@ -344,16 +344,15 @@ public class RedBlackTree<T> {
         if (startNode.right != null) {
             return min(startNode.right);
         }
-        Node parentNode = startNode.parent;
-        while (parentNode != null && startNode == parentNode.right) {
-            startNode = parentNode;
-            parentNode = parentNode.parent;
+        while (startNode.parent != null && startNode == startNode.parent.right) {
+            startNode = startNode.parent;
         }
-        return parentNode;
+
+        return startNode.parent;
     }
 
     protected Node min(Node startNode) {
-        while (startNode.left != null) {
+        while (!isNull(startNode.left)) {
             startNode = startNode.left;
         } 
         return startNode;
@@ -364,7 +363,7 @@ public class RedBlackTree<T> {
     };
 
     protected Node max(Node startNode) {
-        while (startNode.right != null) {
+        while (!isNull(startNode.right)) {
             startNode = startNode.right;
         }
         return startNode;
@@ -374,19 +373,14 @@ public class RedBlackTree<T> {
         return max(this.root);
     }
 
-    private void inOrder(Node node, StringJoiner joiner) {
-        if (isNull(node)) {
-            return;
-        }
-
-        inOrder(node.left, joiner);
-        joiner.add(node.toString());
-        inOrder(node.right, joiner);
-    }
-
     public String toString() {
         StringJoiner output = new StringJoiner(",");
-        inOrder(this.root, output);
+        Node curNode = min(this.root);
+        System.out.println(curNode);
+        while (!isNull(curNode)) {
+            output.add(curNode.toString());
+            curNode = successor(curNode);
+        }
         return output.toString();
     }
 }
